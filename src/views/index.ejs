@@ -64,26 +64,37 @@
                         <td><%= webApp.servicePlanName %></td>
                         <td><%= webApp.sku %></td>
                         <td>
-                            <form action="/start" method="post" class="action-form" style="display:inline;">
-                                <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
-                                <input type="hidden" name="appName" value="<%= webApp.name %>">
-                                <button type="submit" class="btn btn-success btn-sm" <%= webApp.state === 'Running' ? 'disabled' : '' %>>Start</button>
-                            </form>
-                            <form action="/stop" method="post" class="action-form" style="display:inline;">
-                                <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
-                                <input type="hidden" name="appName" value="<%= webApp.name %>">
-                                <button type="submit" class="btn btn-danger btn-sm" <%= webApp.state !== 'Running' ? 'disabled' : '' %>>Stop</button>
-                            </form>
-                            <form action="/scale/basic" method="post" class="action-form" style="display:inline;">
-                                <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
-                                <input type="hidden" name="appName" value="<%= webApp.name %>">
-                                <button type="submit" class="btn btn-warning btn-sm">Scale to Basic</button>
-                            </form>
-                            <form action="/scale/premium" method="post" class="action-form" style="display:inline;">
-                                <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
-                                <input type="hidden" name="appName" value="<%= webApp.name %>">
-                                <button type="submit" class="btn btn-primary btn-sm">Scale to Premium</button>
-                            </form>
+                            
+                            <% if (webApp.state === 'Running') { %>
+                                <!-- Afficher uniquement le bouton Stop si la web app est démarrée -->
+                                <form action="/stop" method="post" class="action-form d-inline-block w-50" style="margin-right: 5px;">
+                                    <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
+                                    <input type="hidden" name="appName" value="<%= webApp.name %>">
+                                    <button type="submit" class="btn btn-danger btn-sm btn-block">Stop</button>
+                                </form>
+                            <% } else { %>
+                                <!-- Afficher uniquement le bouton Start si la web app est arrêtée -->
+                                <form action="/start" method="post" class="action-form d-inline-block w-50" style="margin-right: 5px;">
+                                    <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
+                                    <input type="hidden" name="appName" value="<%= webApp.name %>">
+                                    <button type="submit" class="btn btn-success btn-sm btn-block">Start</button>
+                                </form>
+                            <% } %>
+                            <% if (webApp.sku === 'B1') { %>
+                                <!-- Afficher uniquement le bouton Scale to Premium si le plan est Basic -->
+                                <form action="/scale/premium" method="post" class="action-form d-inline-block w-50" style="margin-right: 5px;">
+                                    <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
+                                    <input type="hidden" name="appName" value="<%= webApp.name %>">
+                                    <button type="submit" class="btn btn-primary btn-sm btn-block">Scale to Premium</button>
+                                </form>
+                            <% } else { %>
+                                <!-- Afficher uniquement le bouton Scale to Basic si le plan n'est pas Basic -->
+                                <form action="/scale/basic" method="post" class="action-form d-inline-block w-50" style="margin-right: 5px;">
+                                    <input type="hidden" name="resourceGroupName" value="<%= webApp.resourceGroup %>">
+                                    <input type="hidden" name="appName" value="<%= webApp.name %>">
+                                    <button type="submit" class="btn btn-warning btn-sm btn-block">Scale to Basic</button>
+                                </form>
+                            <% } %>
                         </td>
                     </tr>
                 <% }) %>

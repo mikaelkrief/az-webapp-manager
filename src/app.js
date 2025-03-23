@@ -7,10 +7,12 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const path = require('path');
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
